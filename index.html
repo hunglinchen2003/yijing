@@ -168,13 +168,29 @@
   .lines-read { margin: 0; padding-left: 1.2em; }
   .lines-read li { margin: 8px 0; }
   .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+  .hero {
+    display: block; width: 100%; height: 176px; object-fit: cover;
+    margin: 2px 0 16px; border: 1px solid rgba(36, 25, 16, 0.16); background: #efe4cf;
+  }
+  .scene { width: min(100%, 250px); margin: 6px auto 8px; }
+  .scene img {
+    display: block; width: 100%; height: 136px; object-fit: cover;
+    background: #efe4cf; border: 1px solid rgba(36, 25, 16, 0.12);
+  }
+  .scene img + img { margin-top: 4px; }
+  .scene figcaption { margin: 4px 0 0; font-size: 0.78rem; letter-spacing: 0.14em; color: var(--muted); }
+  .ai { background: rgba(142, 47, 47, 0.06); padding: 12px 14px; }
+  .ai p { margin: 0; }
+  .ai .meta { margin-top: 8px; }
   .grid button {
+    display: grid; grid-template-columns: 42px 1fr; gap: 8px; align-items: center;
     background: transparent; border: 1px solid rgba(36, 25, 16, 0.16);
-    padding: 8px 4px; cursor: pointer; text-align: center;
+    padding: 6px; cursor: pointer; text-align: left;
   }
   .grid button:hover { border-color: var(--cinnabar); color: var(--cinnabar); }
   .grid button b { display: block; font-weight: 700; letter-spacing: 0.08em; }
   .grid button small { display: block; color: var(--muted); letter-spacing: 0; font-size: 0.75rem; }
+  .mini img { display: block; width: 42px; height: 22px; object-fit: cover; background: #efe4cf; }
   .grid button:hover small { color: var(--cinnabar); }
   footer { margin-top: 26px; font-size: 0.86rem; text-align: center; }
   footer a { color: var(--muted); }
@@ -184,6 +200,8 @@
     .coin { width: 72px; height: 72px; font-size: 24px; }
     .pair { grid-template-columns: 1fr; }
     .grid { grid-template-columns: 1fr 1fr; }
+    .hero { height: 132px; }
+    .scene img { height: 112px; }
     .sound { position: static; display: block; margin: 0 auto 8px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -624,11 +642,192 @@ function stackInner(lines, placeholders) {
   return html;
 }
 
+const TRI_FILE = { "111": "qian", "000": "kun", "100": "zhen", "011": "xun", "010": "kan", "101": "li", "001": "gen", "110": "dui" };
+const STANCE = {
+  進: "可以往前，但只推進一步，而且要用正的方式，不要用搶的。",
+  守: "先別急著改局面。把已經有的守住，比再開一條線重要。",
+  待: "方向不必放棄，只是現在還不到大動作的時候。等待要拿來準備。",
+  合: "這件事成不成，看你怎麼跟人一起做，不是你一個人硬完成。",
+  變: "該處理的已經浮出來了。再拖，不會自己變好。",
+  省: "先看清楚、先調整自己的做法，再決定進或退。"
+};
+const TOPIC_LINE = {
+  工作: "放到工作上，先看這個位置能不能做久、責任清不清楚，不要只看眼前順不順。",
+  感情: "放到感情上，先看彼此是不是真的相應，心意和名分有沒有對上。",
+  錢: "放到錢上，先看這筆來往能不能守得住，不要用一次冒險代表全部。",
+  家: "放到家裡，先把內部的位置和話說清楚，再談外面的決定。",
+  身體: "放到身體上，先停掉正在消耗你的習慣，再談要不要大動作。",
+  學業: "放到學習上，按順序把還不會的補上，不要跳過基礎。",
+  去留: "放到去留上，先分清是該離開，還是只想逃開眼前的不舒服。"
+};
+
+function triSrc(bits3) {
+  return "images/" + TRI_FILE[bits3] + ".png";
+}
+
+function sceneHtml(bits) {
+  const tri = triText(bits);
+  return '<figure class="scene"><img src="' + triSrc(bits.slice(3)) + '" alt="上卦' + tri.upper.name + "，" + tri.upper.nature +
+    '"><img src="' + triSrc(bits.slice(0, 3)) + '" alt="下卦' + tri.lower.name + "，" + tri.lower.nature +
+    '"><figcaption>上' + tri.upper.nature + " · 下" + tri.lower.nature + "</figcaption></figure>";
+}
+
+function miniHtml(bits) {
+  return '<span class="mini"><img src="' + triSrc(bits.slice(3)) + '" alt=""><img src="' + triSrc(bits.slice(0, 3)) + '" alt=""></span>';
+}
+
+function pick(seed, list) {
+  let n = 0;
+  for (let i = 0; i < seed.length; i += 1) n = (n + seed.charCodeAt(i) * (i + 1)) % 997;
+  return list[n % list.length];
+}
+
+function topicOf(q) {
+  const rules = [
+    [["工作", "職場", "老闆", "同事", "辭職", "離職", "上班", "面試", "事業", "公司"], "工作"],
+    [["感情", "戀愛", "男友", "女友", "結婚", "分手", "復合", "喜歡", "婚姻", "對象"], "感情"],
+    [["錢", "財", "投資", "生意", "貸款", "債務", "股票", "收入", "薪水"], "錢"],
+    [["家人", "父母", "爸爸", "媽媽", "孩子", "家裡"], "家"],
+    [["健康", "生病", "身體", "病"], "身體"],
+    [["考試", "升學", "讀書", "論文", "學校"], "學業"],
+    [["搬家", "出國", "留下", "離開", "旅行", "去留"], "去留"]
+  ];
+  for (let i = 0; i < rules.length; i += 1) {
+    if (rules[i][0].some((key) => q.includes(key))) return rules[i][1];
+  }
+  return "";
+}
+
+function isYesNo(q) {
+  return /嗎|要不要|是否|能不能|該不該|好不好|繼續|留不留/.test(q);
+}
+
+function lean(item) {
+  const map = {
+    進: "比較偏向可以往前做，但做法要正，不能靠硬搶。",
+    守: "比較偏向先停一下，不要在這個時候把決定做死。",
+    待: "比較偏向再等一等，把條件補齊再動。",
+    合: "比較偏向找對的人一起做，不適合一個人扛。",
+    變: "比較偏向要改，維持原樣不會過去。",
+    省: "比較偏向先看清楚再決定，現在還不到拍板的時候。"
+  };
+  return map[item.tone] || "";
+}
+
+function composeReading() {
+  const bits = bitsOf(state.lines);
+  const item = GUA[bits];
+  const changing = [];
+  state.lines.forEach((line, index) => { if (line.changing) changing.push({ line, index }); });
+  const next = GUA[bitsOf(changedLines(state.lines))];
+  const q = (state.question || "").trim();
+  const topic = topicOf(q);
+  const sentences = [];
+  if (state.mode === "browse") {
+    sentences.push("這一卦是" + item.full + "，提要是「" + item.motto + "」。");
+    sentences.push(STANCE[item.tone] || "");
+  } else if (q) {
+    sentences.push(pick(q + bits, [
+      "把「" + q + "」放進這一卦來看。",
+      "就「" + q + "」這件事，卦給的不是命運判決，是一個做法。",
+      "你問的是「" + q + "」。先不要急著要一個單純的是或否。"
+    ]) + "得到的是" + item.full + "，「" + item.motto + "」。");
+    sentences.push(isYesNo(q) ? lean(item) : (STANCE[item.tone] || ""));
+  } else {
+    sentences.push("就你心裡那件事，得到的是" + item.full + "，「" + item.motto + "」。");
+    sentences.push(STANCE[item.tone] || "");
+  }
+  if (topic && TOPIC_LINE[topic] && state.mode !== "browse") sentences.push(TOPIC_LINE[topic]);
+  if (changing.length === 1) {
+    const one = changing[0];
+    sentences.push("這次真正要聽的是" + yaoName(one.index, one.line.yang) + "：" + item.lines[one.index]);
+  } else if (changing.length > 1) {
+    const top = changing[changing.length - 1];
+    sentences.push("變爻是" + changing.map((x) => yaoName(x.index, x.line.yang)).join("、") + "。最靠上的" + yaoName(top.index, top.line.yang) + "說：" + item.lines[top.index]);
+  } else if (state.mode !== "browse") {
+    sentences.push("六爻沒有變，短期就照這個格局走，不必再猜另一個結局。");
+  }
+  if (changing.length && next && next.n !== item.n) {
+    sentences.push("走下去會轉向" + next.full + "，那裡的意思是「" + next.motto + "」。" + next.advice);
+  }
+  sentences.push("所以眼前這一步：" + item.advice);
+  return sentences.filter(Boolean).join("");
+}
+
+function aiPrompt() {
+  const bits = bitsOf(state.lines);
+  const item = GUA[bits];
+  const changing = [];
+  state.lines.forEach((line, index) => { if (line.changing) changing.push(yaoName(index, line.yang) + "：" + item.lines[index]); });
+  const next = GUA[bitsOf(changedLines(state.lines))];
+  return [
+    "你是周易金錢課的解說。用繁體中文，第二人稱，平靜具體。",
+    "不要神棍，不要保證發財或必然結果，不要條列，不要標題。寫一百八十字到兩百六十字。",
+    "先回應提問，再講本卦，有變爻就只展開最關鍵的一爻，最後給一個今天能做的下一步。",
+    "問題：" + (state.mode === "browse" ? "（這是瀏覽卦義，沒有擲幣）" : questionText()),
+    "本卦：第" + item.n + "卦 " + item.full + "。提要：" + item.motto + "。",
+    "卦意：" + item.summary,
+    "做法：" + item.advice,
+    changing.length ? "變爻：" + changing.join(" ") : "沒有變爻。",
+    changing.length && next.n !== item.n ? "之卦：" + next.full + "。" + next.summary : ""
+  ].filter(Boolean).join("\n");
+}
+
+function usableAi(text) {
+  const clean = String(text || "").replace(/\*\*/g, "").replace(/^["「\s]+|["」\s]+$/g, "").trim();
+  const han = (clean.match(/[\u4e00-\u9fff]/g) || []).length;
+  if (han < 60 || clean.length > 500) return "";
+  return clean;
+}
+
+let aiToken = 0;
+async function requestAi() {
+  const token = ++aiToken;
+  const el = document.getElementById("ai-reading");
+  if (!el || state.view !== "result") return;
+  state.aiText = el.textContent;
+  let text = "";
+  try {
+    text = await askOnDevice(aiPrompt());
+  } catch (e) { text = ""; }
+  if (!text) {
+    try { text = await askRemote(aiPrompt()); } catch (e) { text = ""; }
+  }
+  text = usableAi(text);
+  if (!text || token !== aiToken || state.view !== "result") return;
+  const node = document.getElementById("ai-reading");
+  const status = document.getElementById("ai-status");
+  if (node) node.textContent = text;
+  state.aiText = text;
+  if (status) status.textContent = "這段已依你的問題再生成。";
+}
+
+async function askOnDevice(prompt) {
+  const LM = globalThis.LanguageModel;
+  if (!LM || typeof LM.availability !== "function") return "";
+  const availability = await LM.availability();
+  if (availability === "unavailable" || availability === "no") return "";
+  const session = await LM.create();
+  return await session.prompt(prompt);
+}
+
+async function askRemote(prompt) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 20000);
+  try {
+    const res = await fetch("https://text.pollinations.ai/" + encodeURIComponent(prompt), { signal: ctrl.signal });
+    if (!res.ok) throw new Error(String(res.status));
+    return await res.text();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function card(bits, lines, role) {
   const item = GUA[bits];
   const tri = triText(bits);
-  return '<article class="card"><p class="role">' + role + '</p><div class="glyph" aria-hidden="true">' + glyph(item.n) +
-    '</div><h2><em class="tone">' + item.tone + "</em>" + item.full + '</h2><p class="num">第 ' + item.n + " 卦 · " + item.motto +
+  return '<article class="card"><p class="role">' + role + "</p>" + sceneHtml(bits) +
+    '<h2><em class="tone">' + item.tone + "</em>" + item.full + '</h2><p class="num">第 ' + item.n + " 卦 · " + item.motto +
     '</p><div class="stack">' + stackInner(lines, false) + '</div><p class="tri">下卦 ' + tri.lower.name + " · " + tri.lower.nature + " · " + tri.lower.attr +
     "<br>上卦 " + tri.upper.name + " · " + tri.upper.nature + " · " + tri.upper.attr + "</p></article>";
 }
@@ -649,6 +848,7 @@ function render() {
     if (field) field.value = state.question || "";
   }
   if (state.view === "cast") paintCast();
+  if (state.view === "result") requestAi();
   document.title = state.view === "result" ? currentFull() + " · 周易金錢問卦" : "周易金錢問卦";
   setSoundButton();
   window.scrollTo(0, 0);
@@ -669,7 +869,8 @@ function askHtml() {
     const name = gua ? gua.full : "卦";
     return '<button class="item" type="button" data-action="history" data-id="' + esc(item.id) + '"><b>' + esc(name) + " · " + esc(item.question || "心中所問") + "</b><small>" + formatWhen(item.at) + "</small></button>";
   }).join("");
-  return '<p class="lede">想好一件事。每次擲三枚錢幣，一共六次。陽爻是實線，陰爻是斷線，從下面往上疊成一卦。</p>' +
+  return '<img class="hero" src="images/hero.png" alt="三枚古錢與硯台">' +
+    '<p class="lede">想好一件事。每次擲三枚錢幣，一共六次。陽爻是實線，陰爻是斷線，從下面往上疊成一卦。</p>' +
     '<label for="q"><span>你想問的事</span></label>' +
     '<textarea id="q" maxlength="80" placeholder="例如：這份工作，我還要繼續嗎？"></textarea>' +
     '<p class="hint">也可以留白，在心裡問。一次只問一件具體的事。</p>' +
@@ -722,7 +923,7 @@ function paintCast() {
 function indexHtml() {
   const cells = orderedBits().map((bits) => {
     const item = GUA[bits];
-    return '<button type="button" data-action="open" data-bits="' + bits + '" data-n="' + item.n + '"><b>' + item.name + "</b><small>" + item.full + "</small></button>";
+    return '<button type="button" data-action="open" data-bits="' + bits + '" data-n="' + item.n + '">' + miniHtml(bits) + "<span><b>" + item.name + "</b><small>" + item.full + "</small></span></button>";
   }).join("");
   return '<p class="lede">點一卦，讀卦義。若要問眼前的事，回到擲幣。</p>' +
     '<input class="search" id="filter" type="search" placeholder="搜尋卦名，例如：泰、謙、未濟" aria-label="搜尋卦名">' +
@@ -754,6 +955,8 @@ function resultHtml() {
   html += '<div class="pair">' + card(bits, state.lines, showNext || state.mode === "browse" ? "本卦 · 眼下" : "本卦") +
     (showNext ? card(nextBits, nextLines, "之卦 · 走向") : "") + "</div>";
   html += '<p class="legend">' + (changing.length ? "實線為陽，斷線為陰。紅色是變爻：圓圈的老陽將變陰，叉號的老陰將變陽。" : "實線為陽，斷線為陰。") + "</p>";
+  state.aiText = composeReading();
+  html += '<section class="block ai"><h3>AI 解說</h3><p id="ai-reading">' + esc(state.aiText) + '</p><p class="meta" id="ai-status">依你的問題與卦象寫成。</p></section>';
   html += '<section class="block"><h3>怎麼看</h3><p>' + bridge(item, state.lines) + "</p></section>";
   html += '<section class="block"><h3>卦意</h3><p>' + item.summary + "</p></section>";
   html += '<section class="block"><h3>可以怎麼做</h3><p>' + item.advice + "</p></section>";
@@ -784,7 +987,7 @@ function readingText() {
   const changing = state.lines.filter((line) => line.changing);
   const next = GUA[bitsOf(changedLines(state.lines))];
   const rows = ["周易金錢問卦", "問題：" + questionText(), state.mode === "browse" ? "卦義瀏覽" : formatWhen(state.resultAt), ""];
-  rows.push("本卦：第 " + item.n + " 卦 " + item.full);
+  rows.push("AI 解說", state.aiText || composeReading(), "", "本卦：第 " + item.n + " 卦 " + item.full);
   rows.push(item.summary);
   rows.push(item.advice);
   if (changing.length) {
