@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="周易金錢問卦：擲三枚錢幣，六次成卦，解讀六十四卦的本卦、變爻與之卦。">
+<meta property="og:title" content="周易金錢問卦">
+<meta property="og:description" content="擲三枚錢幣，六次成卦，看本卦、變爻與之卦。">
+<meta property="og:type" content="website">
+<title>周易金錢問卦</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%238e2f2f' width='100' height='100'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='62' fill='%23f6efe0' font-family='serif'%3E%E6%98%93%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #16110e;
+    --paper: #f3ead7;
+    --ink: #221910;
+    --muted: #6f6256;
+    --cinnabar: #8e2f2f;
+    --cinnabar-deep: #6d2222;
+    --line: #241910;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(1000px 560px at 50% -10%, #3a2c22 0%, transparent 58%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "PMingLiU", "MingLiU", "Songti TC", "Source Han Serif TC", "Noto Serif TC", "Microsoft JhengHei", serif;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+  ::selection { background: #e7c3c3; }
+  :focus-visible { outline: 2px solid var(--cinnabar); outline-offset: 2px; }
+  button, textarea, input { font: inherit; color: inherit; }
+  .watermark {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 48vw;
+    line-height: 1;
+    color: rgba(243, 234, 215, 0.04);
+    pointer-events: none;
+    user-select: none;
+  }
+  .desk { max-width: 760px; margin: 0 auto; padding: 32px 16px 56px; position: relative; z-index: 1; }
+  .slip {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid rgba(36, 25, 16, 0.22);
+    outline: 1px solid rgba(142, 47, 47, 0.35);
+    outline-offset: -8px;
+    padding: 36px 32px 22px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+  }
+  header { text-align: center; margin-bottom: 8px; }
+  .seal {
+    width: 52px; height: 52px; margin: 0 auto 8px;
+    border: 3px solid var(--cinnabar); color: var(--cinnabar);
+    display: grid; place-items: center;
+    font-size: 28px; font-weight: 700;
+    transform: rotate(-8deg);
+  }
+  .classic { margin: 0; letter-spacing: 0.28em; color: var(--muted); font-size: 0.86rem; }
+  h1 { margin: 4px 0 0; font-size: 2.15rem; letter-spacing: 0.22em; font-weight: 700; }
+  h2 { margin: 0; font-size: 1.5rem; letter-spacing: 0.12em; font-weight: 700; }
+  h3 { margin: 0 0 6px; font-size: 1rem; letter-spacing: 0.18em; color: var(--cinnabar); font-weight: 700; }
+  .sound {
+    position: absolute; top: 14px; right: 16px;
+    background: transparent; border: 0; color: var(--muted);
+    letter-spacing: 0.12em; cursor: pointer; padding: 4px;
+  }
+  .sound:hover { color: var(--cinnabar); }
+  .lede, .hint, .legend, .banner, .tri, .num, footer, .meta { color: var(--muted); }
+  .lede { text-align: center; margin: 8px 0 18px; }
+  label span, .asked span, .role {
+    display: block; letter-spacing: 0.22em; font-size: 0.78rem; color: var(--muted);
+  }
+  textarea, .search {
+    width: 100%; border: 0; border-bottom: 1px solid rgba(36, 25, 16, 0.35);
+    background: transparent; padding: 8px 0; line-height: 1.7;
+  }
+  textarea { resize: vertical; min-height: 84px; }
+  textarea:focus, .search:focus { outline: none; border-bottom-color: var(--cinnabar); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .btn {
+    appearance: none; border: 0; cursor: pointer;
+    background: var(--cinnabar); color: #f8f1e4;
+    letter-spacing: 0.16em; padding: 12px 18px;
+  }
+  .btn:hover { background: var(--cinnabar-deep); }
+  .btn.secondary { background: transparent; color: var(--ink); border: 1px solid rgba(36, 25, 16, 0.35); }
+  .btn.secondary:hover { background: rgba(142, 47, 47, 0.06); }
+  .btn:disabled { opacity: 0.55; cursor: wait; }
+  .text-btn { background: transparent; border: 0; color: var(--muted); cursor: pointer; letter-spacing: 0.08em; padding: 4px 0; }
+  .text-btn:hover { color: var(--cinnabar); }
+  .help { background: rgba(142, 47, 47, 0.06); padding: 12px 14px; margin-top: 14px; }
+  .help ol { margin: 8px 0 0; padding-left: 1.2em; }
+  .history { margin-top: 26px; }
+  .history h2 { font-size: 1rem; letter-spacing: 0.16em; }
+  .item {
+    display: block; width: 100%; text-align: left; cursor: pointer;
+    background: transparent; border: 0; border-top: 1px solid rgba(36, 25, 16, 0.12);
+    padding: 8px 0;
+  }
+  .item small { display: block; color: var(--muted); }
+  .now { text-align: center; letter-spacing: 0.42em; font-size: 1.35rem; margin: 8px 0; }
+  .dots { display: flex; justify-content: center; gap: 8px; margin: 0 0 8px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--cinnabar); display: block; }
+  .dots i.on { background: var(--cinnabar); }
+  .coins { display: flex; justify-content: center; gap: 18px; margin: 8px 0 4px; perspective: 600px; }
+  .coin {
+    width: 86px; height: 86px; border-radius: 50%; position: relative;
+    display: grid; place-items: center;
+    background: radial-gradient(circle at 35% 30%, #f3ddb0, #c4964e 42%, #7a5524 76%, #4e3416);
+    box-shadow: inset 0 0 0 5px #e6c98a, inset 0 0 0 8px #8a5e28, 0 10px 18px rgba(0, 0, 0, 0.18);
+    color: #3b2712; font-weight: 700; font-size: 30px;
+  }
+  .coin .mark { position: relative; z-index: 1; transform: translateY(-12px); }
+  .coin::after {
+    content: ""; position: absolute; width: 14px; height: 14px; background: var(--paper);
+    transform: translateY(12px) rotate(45deg);
+    box-shadow: inset 0 0 0 1px rgba(80, 50, 20, 0.3);
+  }
+  .coin.flipping { animation: spin 0.12s linear infinite; }
+  @keyframes spin {
+    50% { transform: rotateY(90deg) scale(0.96); filter: brightness(1.25); }
+  }
+  .throw { min-height: 3.2em; text-align: center; color: var(--cinnabar); margin: 4px 0 10px; }
+  .stack { display: flex; flex-direction: column-reverse; gap: 8px; width: min(100%, 230px); margin: 8px auto; }
+  .yao { display: grid; grid-template-columns: 1fr 42px; align-items: center; gap: 8px; min-height: 22px; }
+  .bars { display: flex; gap: 12px; align-items: center; height: 16px; }
+  .bars i { position: relative; flex: 1; height: 8px; background: var(--line); border-radius: 1px; }
+  .yao.ghost .bars i { background: transparent; box-shadow: inset 0 0 0 1px rgba(36, 25, 16, 0.22); }
+  .bars.changing i { background: var(--cinnabar); }
+  .bars.yang.changing i::after {
+    content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px;
+    border: 2px solid var(--cinnabar); border-radius: 50%; background: var(--paper);
+    transform: translate(-50%, -50%);
+  }
+  .bars.yin.changing { position: relative; }
+  .bars.yin.changing::after {
+    content: "×"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%);
+    color: var(--cinnabar); font-size: 18px; line-height: 1; font-style: normal;
+  }
+  .yao-label { font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
+  .yao.hot .yao-label { color: var(--cinnabar); }
+  .yao.just { animation: ink 0.45s ease; }
+  @keyframes ink { from { opacity: 0; } to { opacity: 1; } }
+  .asked { text-align: center; margin: 6px 0 14px; }
+  .asked strong { font-size: 1.12rem; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+  .pair:has(> :only-child) { grid-template-columns: minmax(0, 320px); justify-content: center; }
+  .card { text-align: center; }
+  .glyph {
+    font-family: "Segoe UI Symbol", "Segoe UI Historic", "Noto Sans Symbols 2", "Apple Symbols", sans-serif;
+    font-size: 68px; line-height: 1; margin: 4px 0;
+  }
+  .tone {
+    display: inline-grid; place-items: center;
+    width: 1.55em; height: 1.55em; margin-right: 0.35em;
+    border: 1px solid var(--cinnabar); color: var(--cinnabar);
+    font-style: normal; font-size: 0.62em; vertical-align: 0.15em; letter-spacing: 0;
+  }
+  .block { margin-top: 18px; }
+  .lines-read { margin: 0; padding-left: 1.2em; }
+  .lines-read li { margin: 8px 0; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+  .grid button {
+    background: transparent; border: 1px solid rgba(36, 25, 16, 0.16);
+    padding: 8px 4px; cursor: pointer; text-align: center;
+  }
+  .grid button:hover { border-color: var(--cinnabar); color: var(--cinnabar); }
+  .grid button b { display: block; font-weight: 700; letter-spacing: 0.08em; }
+  .grid button small { display: block; color: var(--muted); letter-spacing: 0; font-size: 0.75rem; }
+  .grid button:hover small { color: var(--cinnabar); }
+  footer { margin-top: 26px; font-size: 0.86rem; text-align: center; }
+  footer a { color: var(--muted); }
+  @media (max-width: 640px) {
+    .slip { padding: 32px 16px 16px; outline-offset: -6px; }
+    h1 { font-size: 1.7rem; letter-spacing: 0.14em; }
+    .coin { width: 72px; height: 72px; font-size: 24px; }
+    .pair { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr 1fr; }
+    .sound { position: static; display: block; margin: 0 auto 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  @media print {
+    body { background: white; }
+    .watermark, .actions, .sound, .no-print { display: none !important; }
+    .desk { padding: 0; }
+    .slip { box-shadow: none; outline: none; }
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true">易</div>
+<div class="desk">
+  <article class="slip">
+    <header>
+      <button id="sound-btn" class="sound" type="button" data-action="sound">聲音開</button>
+      <div class="seal" aria-hidden="true">易</div>
+      <p class="classic">周易 · 六十四卦</p>
+      <h1>金錢問卦</h1>
+    </header>
+    <div id="main"></div>
+    <footer>爻辭依《周易》古義，用現代話重述，方便對照自己的問題。這是文化體驗，不代替你的判斷。<br><a href="https://hunglinchen2003.github.io/yijing/">hunglinchen2003.github.io/yijing</a></footer>
+  </article>
+</div>
+<noscript>需要開啟 JavaScript，才能擲幣成卦。</noscript>
+<script>
+function g(n, name, full, motto, tone, summary, advice, lines) {
+  return { n, name, full, motto, tone, summary, advice, lines };
+}
+
+const TRIGRAMS = {
+  "111": { name: "乾", nature: "天", attr: "健" },
+  "110": { name: "兌", nature: "澤", attr: "悅" },
+  "101": { name: "離", nature: "火", attr: "麗" },
+  "100": { name: "震", nature: "雷", attr: "動" },
+  "011": { name: "巽", nature: "風", attr: "入" },
+  "010": { name: "坎", nature: "水", attr: "陷" },
+  "001": { name: "艮", nature: "山", attr: "止" },
+  "000": { name: "坤", nature: "地", attr: "順" }
+};
+
+const LINE_KIND = {
+  6: { name: "老陰", yang: false, changing: true, hint: "陰爻，將變陽" },
+  7: { name: "少陽", yang: true, changing: false, hint: "陽爻，不變" },
+  8: { name: "少陰", yang: false, changing: false, hint: "陰爻，不變" },
+  9: { name: "老陽", yang: true, changing: true, hint: "陽爻，將變陰" }
+};
+
+const GUA = {
+  "111111": g(1, "乾", "乾為天", "自強開創", "進",
+    "六個陽爻是全經最剛健的一卦。你問的這件事，要你親自開頭，把方向定在正，而不是只求快。",
+    "自己先走第一步，用持續的行動累積信用。越順利越要把功勞分出去，也給自己留退路。",
+    ["時機還早，先把本事練穩，不必急著出頭。", "能力已經被人看見，適合去找能共事的人。", "白天認真做，晚上回頭看，時時警惕就不會出大錯。", "可進可退的關口，先想清楚再決定跳不跳。", "位子和時機都到了，把主張做成看得見的成果。", "剛強用到盡頭就會後悔，該收、該讓、該把舞台交給別人。"]),
+  "000000": g(2, "坤", "坤為地", "厚載順成", "守",
+    "六個陰爻是承接、包容與成全。這件事不宜搶在最前面硬推，適合把條件鋪好，讓事情順著正道成形。",
+    "先聽清楚、先配合、先把地基做穩。柔不是沒有主張，是選擇用承載來完成。",
+    ["看見小徵兆就要提早準備，霜濃之後就是冰。", "心裡方正、做事踏實，不必刻意經營名聲。", "收起鋒芒，把事情做到可以交付，先不要爭功。", "該收起來的就不要張揚，避免無謂的對立。", "處在重要位置時用中和的方式，謙遜會帶來吉。", "陰盛到極點還去爭陽的位子，就會兩敗。守住本分。"]),
+  "100010": g(3, "屯", "水雷屯", "萌芽艱辛", "待",
+    "下面想動，上面是險，像幼苗剛出土。你問的事正在開始，難是正常的，不代表方向錯了。",
+    "先聚人、先定規矩、先解開眼前真正卡住的那一件。可以起步，不要一下子鋪太大。",
+    ["還在徘徊時，先站穩，找可靠的人商量再動。", "前進受阻就不要硬衝，退回能立足的地方重整。", "看不清路就先停止擴張，沒有嚮導別往深處走。", "誠心尋求支持，局面會開始鬆動。", "小的成果可以收，大的野心先放一放。", "已經很痛還往前闖，只會更痛。先停下來。"]),
+  "010001": g(4, "蒙", "山水蒙", "虛心受教", "省",
+    "山下有險，是還沒開竅的樣子。你未必缺答案，而是問題還沒問清楚，或不肯從基礎的那一步開始。",
+    "找一個你信任、而且真的懂的人請教。一次只學一件，誠心比技巧重要。",
+    ["啟發需要節奏和規矩，太放任會一直懵。", "包容剛起步的不熟練，耐心本身就是吉。", "不要被不合適的示範帶走，先問那是不是你的路。", "困在糊塗裡時，承認自己不懂，恥感會變成轉機。", "不裝懂，反而遇得到願意教你的人。", "靠處罰逼人開竅，只會把關係弄壞。啟發要有界線。"]),
+  "111010": g(5, "需", "水天需", "守正以待", "待",
+    "你有能力，前面卻有一條還沒過去的河。這卦要的不是放棄，是帶著信心等待可以過河的時候。",
+    "把等待變成準備：補條件、養精神、維持關係。時候到了再過河，不要用焦慮提前跳。",
+    ["危險還遠，維持平常節奏，不要自己嚇自己。", "雖有閒言，最後仍可過去。少辯解，把事情做好。", "越靠近泥沼，越容易被外人拖累。站穩，別被拉去冒險。", "已經太靠近衝突了，先退出爭鬥的位置。", "等待時把身心養好，這是正道，不是逃避。", "突然有人來，以禮相待。意外不一定是壞事。"]),
+  "010111": g(6, "訟", "天水訟", "止爭求直", "省",
+    "天與水背道而行，是爭執、對質、各說各話。硬贏一場，可能輸掉更長的路。",
+    "能協調就先協調，把證據和界線放清楚。若必須爭，爭的是公道，不是面子，而且見好就收。",
+    ["小事不要拉成一場長爭，有一點摩擦就停。", "爭不過時退回自己的位置反省，沒有災咎。", "安分守著舊有的成績，不要為了功名硬拚。", "改換態度、回到正理，局面就能轉。", "得到公正的裁斷就到此為止，不要追加報復。", "一時爭贏還不放手，反覆爭下去最後仍會失。"]),
+  "010000": g(7, "師", "地水師", "紀律成師", "進",
+    "這是聚眾成軍的卦。你問的事需要帶人、編組、面對一場有規模的任務。成敗在於理由正不正，帶頭的人正不正。",
+    "先講清楚為什麼做、誰負責、規矩是什麼。用人要選有經驗又守分寸的，不要用情緒動員。",
+    ["一開始就把紀律說明白，否則人越多越亂。", "得到眾人信任、領導者中正，這是吉。", "指揮失據，就像帶著失敗回來。位置不對就不要硬帶。", "知道何時收兵、退到安全處，是能力，不是膽怯。", "讓有經驗的人主持該處理的問題，名分要正。", "事情做成之後，賞罰要公正。小人得勢，後面會亂。"]),
+  "000010": g(8, "比", "水地比", "親比得助", "合",
+    "水在地上，是親附與結盟。你問的事單做做不成，要找到能真心靠近的人，而且要趁早表明態度。",
+    "選對人再靠近，用誠信而不是用利益堆疊。遲疑太久，或依附不對的圈子，反而有凶。",
+    ["開始靠近時不要隱瞞，誠信才吉。", "親近出於內心，會帶來吉。不要只做表面站隊。", "你靠近了不對的人。該停就停，不要為了不怕孤單而跟錯。", "主動去親近好的影響，比悶著強。", "寬厚而明白地結交，不必人人都收，也不必趕盡。", "找不到可親的對象還在遲疑，結局不好。盡早選擇。"]),
+  "111011": g(9, "小畜", "風天小畜", "蓄力未雨", "待",
+    "風在天上，只蓄住一點力量，雨還沒落下。你有方向，資源和時機卻還差一截。這是小有積累，不是大功告成。",
+    "先把小成果收好，用柔的方式約束衝動。雲很密卻還沒下雨時，適合準備，不適合賭一場大的。",
+    ["先管好自己這一小段，回到正軌就沒有災咎。", "願意被好的力量拉一把，也是吉。", "內部卡了，像車子壞了、自己人反目。先修結構，不要上路。", "把話說明，誠信能讓擔心過去。", "開始能把資源分享出去，富足不是只留在自己手裡。", "雨終於下了，這一段積蓄也該安於所成。再貪會失。"]),
+  "110111": g(10, "履", "天澤履", "以禮涉險", "省",
+    "踩著禮走路，甚至像走在虎尾後面。你問的事有分際、有風險，靠禮數和分寸可以通過。",
+    "說話做事都先看自己的位置。不諂媚、不莽撞，該進的一步用恭敬的方式走。",
+    ["用樸素本分前進，不必先包裝自己。", "路平坦的人可以安於清靜，不必人人走熱門的路。", "能力不夠還硬踩，會受傷。再等等，不要逞能。", "踩到危險卻終於無恙，是因為你謹慎。", "位置越高越不可專斷，決斷的同時要知道危險。", "回頭把走過的路看清楚，經驗會變成下一步的吉。"]),
+  "111000": g(11, "泰", "地天泰", "通達交泰", "進",
+    "天地相交，閉塞在打開。你問的事有交流、有來往，是通泰的格局。盛時也要想到它會轉。",
+    "趁通道打開，把該合作的、該決定的做完。同時留一份儉省，不要因為順就浮誇。",
+    ["適合帶著同路人一起向外起步。", "包容還不完美的人，心胸寬，局面就大。", "沒有只平不坡的路。艱難時仍守誠信，才不會有咎。", "不靠炫耀，和鄰人誠心往來。", "把自己放低，尊貴的關係才穩。", "最順的時候不要再發動不必要的擴張，泰極會轉。"]),
+  "000111": g(12, "否", "天地否", "閉藏待時", "守",
+    "天地不交，上下隔閡，話傳不進去，力量使不上。這不是叫你認輸，是叫你不要在閉塞時硬闖。",
+    "收斂、保全、把德行守住。等待交通恢復再出來做事。暫時的退，是為了以後能通。",
+    ["和志同的人一起儉省退守，可以吉。", "小人得勢時，守住自己的正，不要同流。", "心裡覺得羞恥，說明良知還在，這是轉折的開始。", "閉塞開始鬆動。把位置放在穩的地方，同伴也會受益。", "小心再小心，大人可以在休止之後重新亨通。", "阻塞到了盡頭反而要轉開。先熬過，再迎接打開。"]),
+  "101111": g(13, "同人", "天火同人", "公正和同", "合",
+    "和人結伴、公開共事的卦。你問的事適合拉人一起做，但圈子要開在光明處，不能變成私黨。",
+    "把目標說清楚，讓對的人都能參與。求同要基於正道，不要用排除異己來換團結。",
+    ["一開始就開放，不要先拉小圈子。", "只和自己人相同，路會變窄，後面會有遺憾。", "疑心太重，合作會停擺。把防備收一收。", "知道停戰，比硬攻好。", "經過誤會，大的力量仍能會合。", "格局最大的合作，往往在名利中心之外。"]),
+  "111101": g(14, "大有", "火天大有", "富而守禮", "進",
+    "火在天上，光明而富有。你問的事有收成、有資源、有能見度。大有不是叫你揮霍，是叫你用中道守住這份豐盛。",
+    "把擁有的分一點出去，止住不好的、彰顯好的。越豐盛越要有禮，財富和權力才待得住。",
+    ["還沒有利害糾纏，先不要驕。", "你有承載的能力，適合把資源用在正事上。", "有收穫要歸於更大的公義，小人承擔不了這個位置。", "不自滿，所以沒有災咎。豐盛時最要防的是膨脹。", "該硬的硬、該信的信，別人才服。", "順道、不居功，最大的擁有是被信任。"]),
+  "001000": g(15, "謙", "地山謙", "謙光受益", "省",
+    "山本該高，卻藏在地之下。你越有實力，越適合放低姿態。謙不是自貶，是實至而不爭。",
+    "先做事實，再談功勞。對上不亢，對下不吝。這條路看起來慢，結果最穩。",
+    ["越難的事，越靠這份低姿態才能過去。", "謙可以被人看見，做得正就吉，不必躲起來。", "有功還謙，能把事情做到底，眾人會跟。", "該幫忙、該退讓的地方都適合做。", "謙到有力量，才不是軟弱，可以去處理不服的事。", "謙德已被看見，仍要自己反省。行動是為了整頓，不是炫耀。"]),
+  "000100": g(16, "豫", "雷地豫", "悅而有備", "進",
+    "雷出地上，是振奮、喜樂，也是預先準備。你問的事有一股可以順勢推動的氣氛。可以回應，不要沉在樂裡。",
+    "順著正當的喜悅去動員人，同時先把節奏和退路安排好。樂是結果，預備才是原因。",
+    ["先別慶祝，看看是不是只有你自己開心。", "穩得很快、守得住中，這是吉。", "看人臉色才開心，會有後悔。把愉悅放回正事上。", "眾人願意一起動，不要懷疑這份順勢，認真去做。", "守著正還一直不安，是執著還沒放下。持續守正即可。", "樂到昏昧，若能改變，就沒有災咎。回頭還來得及。"]),
+  "100110": g(17, "隨", "澤雷隨", "擇善隨從", "合",
+    "動而喜悅，是隨。你問的事適合跟著時勢與對的人走。跟隨要有選擇，不能誰大聲就跟誰。",
+    "看清楚你要隨的是正道還是只是氣氛。選定之後就安心跟，中途反覆改口會失信。",
+    ["標準有變時，改到正的立場就吉。走出去與人交往會有功。", "只跟輕鬆的人，會錯過能成事的人。", "跟隨要有取捨。專心跟對的方向，雖然有所捨，仍可有所得。", "跟錯還有所獲，心術不正就有凶。把立場放在光明處。", "跟的是好的價值，不是好處本身。", "承諾要收束、要真心，不能又隨又散。"]),
+  "011001": g(18, "蠱", "山風蠱", "整治更新", "變",
+    "器皿裡生了蟲，敗壞已經累積。你問的事有陳年問題：拖延、腐敗、含糊。這卦叫你動手整治。",
+    "找出敗壞從哪裡開始，一件一件清。過了觀望期就不要再拖，改革要有始有終。",
+    ["有人能承擔舊問題，就沒有大咎。先從源頭修，過程雖險，最後可吉。", "有些舊弊不宜太硬改，用柔的方式才能持久。", "改得稍急，會有小悔，仍比不做好。", "太姑息，往前走會看到遺憾，問題會再回來。", "把改正做成可以公開的正事，會得到稱讚。", "若局面已不可為，不必硬侍奉，把自己的志向放去更大的地方。"]),
+  "110000": g(19, "臨", "地澤臨", "臨事親民", "進",
+    "陽氣漸長，事情正在靠近一個可以領導、教導、照顧人的位置。好的臨，是你走下去，不是把人壓著。",
+    "把握這段上升的時間親力親為。教導和照顧要有始有終，盛勢不會永遠停在這裡。",
+    ["先讓人願意靠近你，感應到了再推進。", "你的靠近是誠懇的，可以前進。", "用甜言靠近沒有好處。錯了趕快改，就沒有咎。", "真正走到人身邊，不要只在遠處下令。", "用智慧親臨，該管的自己要懂，而不是裝懂。", "盛極將轉時，厚道比巧更重要。"]),
+  "000011": g(20, "觀", "風地觀", "觀己觀人", "省",
+    "風在地上走，是觀看，也是被觀看。你問的事先不要急著介入，把全局看清楚，也想到別人正看著你怎麼做。",
+    "先觀自己，再觀別人。看的時候放掉成見。你的行事本身就是別人的教材。",
+    ["只看表面，成不了判斷。對要負責任的人來說，這樣不夠。", "從門縫裡看，視野太窄。走出去看。", "先回頭看自己的出處，再決定進退。", "你已經看得夠廣，可以用這份見識去靠近、去效力。", "站在高處更要自省，而不是只看別人。", "把看到的別人變成自省，不要變成挑剔。"]),
+  "100101": g(21, "噬嗑", "火雷噬嗑", "決斷去蔽", "變",
+    "中間有東西卡住，要咬合才合得起來。你問的事裡有障礙、有含糊、有該處理的不正。賞罰和界線必須清楚。",
+    "把卡住的那一件具體點名，公正處理。過程會不舒服，目的是讓事情重新合上。",
+    ["小小懲戒，讓人知錯，就沒有大咎。", "處理得剛好，不要上綱。", "過程不乾淨，仍要忍著把是非分完。", "又硬又難，仍要守住公正，最後可吉。", "中正而能面對危險，雖險沒有災咎。", "拖到對方已經聽不進，懲罰也晚了。能早處理就不要拖到這裡。"]),
+  "101001": g(22, "賁", "山火賁", "文飾有度", "省",
+    "山下有火，是文飾、禮儀與外表的光。你問的事需要呈現，但文不能蓋過質。好看要為內容服務。",
+    "可以把事情說清楚、做得有禮、呈現得體面。若只剩包裝，就停下來補本質。",
+    ["從最基礎的地方修飾，不靠排場。", "外表要跟著內容走，不要只修邊緣。", "好看到能持久，是因為裡面正。", "質樸的誠意比華麗重要，對方不是來搶的。", "小而真的禮，勝過鋪張。", "最高的文飾是返回樸素。"]),
+  "000001": g(23, "剝", "山地剝", "剝極宜守", "守",
+    "一陽在上，五陰在下剝蝕。你問的事正處在剝落期，舊結構、舊優勢、舊關係在一層層掉。此時宜守不宜攻。",
+    "不要在崩的時候加蓋。保住最核心的那一點正，停下擴張，讓該落的落完。",
+    ["從最底下開始壞。無視小損壞，會凶。立刻停損。", "沒有人幫還硬撐，凶。先下來，或找到能扶的人。", "你和剝落的力量分開了，這是對的，沒有大咎。", "已經壞到貼近本身，不能再假裝只是外圍問題。", "若能以柔順把眾人統整好，反而可以轉。", "守住最後的善種。不要跟眾人一起把房子拆光。"]),
+  "100000": g(24, "復", "地雷復", "一陽來復", "變",
+    "一陽回來了。你問的事經過剝落之後，有一個很小但真實的重新開始。回復不靠轟烈，靠回頭、休息、再長。",
+    "給自己一個重新來的節奏，先休養再行動。舊的正道和基本功，比全新的刺激更重要。",
+    ["發現不對立刻回頭，是這卦最貴的能力，大吉。", "願意停下來回到好的狀態，不要不好意思。", "反覆搖擺會累，但只要還肯回，就沒有大咎。", "在眾人裡自己回到正道，即使不合群，也是對的。", "真心回頭，不計較面子，就沒有悔。", "知道該回還不回，會有災。不要再拖過這一爻。"]),
+  "100111": g(25, "無妄", "天雷無妄", "不妄則吉", "省",
+    "真實而不妄為。動機純、腳步正，就亨通。若夾帶僥倖或虛假，意外的災會來。",
+    "不做多餘的動作，不編故事給自己。該做的努力要做，不該得的不要伸手。",
+    ["起步時心是直的，可以走。", "不耕耘卻想收穫，就是妄。把投機放下，才有利前往。", "有些損失不是你的錯。守住，不要亂補償、亂指控。", "該停的妄念停下來，可以守正。", "不是什麼都要插手，有些病不必藥就會好。", "時機已過還硬做，是另一種妄。停。"]),
+  "111001": g(26, "大畜", "山天大畜", "大蓄待行", "待",
+    "大的力量被蓄在山中。你問的事不是不能做，是現在要先積德、積能力、積資源，等到可以行的時候再行。",
+    "先停止不該衝的部分，把能量養厚。學一點真正有用的，比再許一個願重要。",
+    ["剛開始的衝勁先煞車，沒有災咎。", "結構還沒好，不要上路。", "每天練習，利於在艱難中守正，然後可以前往。", "在事情變猛之前先節制，大吉。", "危險的鋒芒已被處理，可以不再怕它。", "蓄積已成，大路打開，可以走。"]),
+  "100001": g(27, "頤", "山雷頤", "養正為本", "省",
+    "形狀像嘴，是頤養。你問的事關係到你靠什麼養自己：食物、言語、資訊、習慣、依賴的人。養正就吉。",
+    "看緊兩件事：嘴上說什麼，和你不斷吃進去的是什麼。選擇能養正的來源。",
+    ["有自己的資源卻去羨慕別人怎麼享用，會失。", "向下、向不該依賴的地方求養，要趕快調回來。", "靠錯誤的方式求養，長時間都不利。", "慾望很強，若動機是正的，沒有災咎。", "安於你該受的養分，不要再去闖大河。", "你若是提供養分的人，責任大。做得正，雖險仍吉。"]),
+  "011110": g(28, "大過", "澤風大過", "非常之舉", "變",
+    "中間太重，像棟梁被壓彎。你問的事超過平常尺度，必須用非常的做法，也必須有支撐，否則會折。",
+    "承認這是非常時期。可以做超出慣例的決定，但要找到能撐住的人和結構，不要一人扛全部。",
+    ["非常的事更要從謙恭、乾淨的基礎開始。", "衰敗處出現新的生機，可以結合新力量。", "你正是那根被壓過的樑。再硬撐會斷，要減壓。", "有支撐把局面抬住了。不要因一時穩住就加碼。", "不平常的結合能解近火，但不是長遠的模範。", "冒險超過你能承受的深度，就不要下。"]),
+  "010010": g(29, "坎", "坎為水", "行險有信", "守",
+    "水重疊是一串坑，不是一個坑。這卦不是叫你逃，是叫你心裡保持通達，用誠信一次次走過。",
+    "不要指望一次躍出。把每一步踩實，說話算話。慌和詐，會使坑更深。",
+    ["同一個錯誤不要再犯第二次。", "這階段能保住一小步就好，不要貪大。", "來去都是險。此時硬闖最糟，先不要動。", "危險中，簡樸的真心比厚禮有用。", "水還沒漫出，你守得住。不要自滿，也不要自棄。", "若已深陷錯的結構，要尋求解開，而不是再綁緊。"]),
+  "101101": g(30, "離", "離為火", "附麗光明", "進",
+    "光明需要依附。你問的事需要被看見，也需要依附正道才能亮。選對依附的對象很重要。",
+    "把事情放在光底下做，依附有德、有能力、有制度的人或平台。光明是用來照見，不是用來灼人。",
+    ["剛開始不穩沒關係，態度要恭敬。", "中正的光明最好，不偏也不炙。", "盛光會過。不及時安頓，就會嘆。", "突然貼上來的光不可靠，要看清。", "正視傷痛，守住中道，反能過去。", "該整頓的要整頓，只處理真正不服的，不要擴大。"]),
+  "001110": g(31, "咸", "澤山咸", "以虛相感", "合",
+    "少男少女相感，是感應。你問的事重在彼此能不能真的感應：感情、合作，或一個還沒說出口的意向。感應不是算計。",
+    "先空出自己，讓對方進得來。感應來了就誠懇回應，不要急著占有或測試。",
+    ["心意才動一點點，還不必行動。", "被動了一下就跑，會失。先待在該在的地方。", "只跟著感覺跑，沒有主見，往前會困窘。", "把感應放正，來往就順，猶豫會消失。", "感受變薄就不會有大悔，也要問自己是清明還是冷淡。", "只剩言語，說得很多、感得很淺，不可靠。"]),
+  "011100": g(32, "恆", "雷風恆", "守常有恆", "守",
+    "你問的事要的不是新鮮，是能不能久。恆的條件是有常道，並願意在變動裡守住那一件不改的。",
+    "選定可以長期做的方式，然後真的做下去。朝令夕改，或一開始就求怪，都不是恆。",
+    ["一開始就挖太深、要太久的保證，反而不成。", "能守中道的恆，才是可久的。", "德行三心二意，別人無法信任。", "守錯地方再久也是空。恆要恆在對的事上。", "只守著順從、不敢擔當，對需要負責的人是凶。", "該安定時繼續攪動，久不了。"]),
+  "001111": g(33, "遯", "天山遯", "知時而退", "守",
+    "時勢要求你退：退開、退隱、退到安全距離。退得正，仍然亨通。",
+    "不要把退看成失敗。把該結束的結束，把消耗你的局面拉開。退的時候姿態要正。",
+    ["先離開是非的邊緣，尾巴還沾著危險就不要往前。", "決定退，就退得堅定，像綁住一樣不可解。", "被關係拴住，會像生病。該斷的要斷。", "你退得光明，對的人懂，不對的人會不以為然。", "退得漂亮，是因為理由正、時機對。", "退到寬裕、沒有牽掛，這是最好的退。"]),
+  "111100": g(34, "大壯", "雷天大壯", "壯而守正", "進",
+    "聲勢很大，力量充足。壯而正就吉，壯而無禮就會折。",
+    "用這股力量推進該推進的，但每一步都問是不是正。不要用壯去壓人。",
+    ["力還只用在腳尖上就衝，會出事。要有誠信。", "守中的壯，可以放心用。", "硬碰硬會像羊角卡在籬笆上。不要用壯去頂。", "力量用在該打開的地方，後悔會消失。", "把太壯的部分減掉，處境就輕，沒有悔。", "進不得也退不得。先停止角力，熬過再找出口。"]),
+  "000101": g(35, "晉", "火地晉", "明進上升", "進",
+    "太陽升起來，是晉升、前進、被看見。適合往光明的方向推進，用自己的德行使人認識你。",
+    "主動把成果和意願放到檯面上。得到支持時，記住是因為光明，不是因為手段。",
+    ["剛進時有阻，寬著心等待信任，不要改走歪路。", "心裡愁，仍可守正。這份托付來自更大的體制或長輩。", "得到眾人信任，後悔會消失。", "貪多、占著位置不實幹，像碩鼠，有危險。", "不要計較每一次小得失，往前是吉。", "只用尖銳處理一切並不好。小範圍的整頓可以，大的不要用角去頂。"]),
+  "101000": g(36, "明夷", "地火明夷", "晦中守明", "守",
+    "太陽沉下去，光明受傷。你處在黑暗、被誤解、不能明說的環境。要保住內在的明，外面白要收起來。",
+    "不必在錯誤的場合證明自己。先保護人、保護志、保護能再亮的那一點。",
+    ["先離開傷害你的地方，翅膀低垂也要趕路。", "已經受傷，靠有力的幫助趕快脫身，吉。", "可以在暗處處理大問題，但不要急著把一切撥正。", "你已摸到黑暗的核心，可以離開這個內庭。", "最難的守法是外表收起來、志向不改。", "若把黑暗當成光明來用，最後會掉下來。"]),
+  "101011": g(37, "家人", "風火家人", "各正其位", "合",
+    "要先安內：家、團隊、最親近的合作。每人有位、有事，說話有內容，做事有常，內部才正。",
+    "先把內規講清楚，從你自己做起。對外發展之前，內部的信任和分工要立住。",
+    ["一開始就把界線定好，後面就不會悔。", "安於把分內的事做好，不強求出人頭地。", "太嚴會有怨，仍比完全沒有規矩好。嚴要有愛。", "能讓內部富足安穩，是大吉。富是井井有條的結果。", "以誠信回到自己人中間，不必憂慮。", "誠信再加上應有的威嚴，最後吉。只有軟或只有威，都不夠。"]),
+  "110101": g(38, "睽", "火澤睽", "異中求同", "合",
+    "兩個方向相反，意見不合，關係有縫。小事可以吉，大事硬合會更裂。",
+    "先承認不同，在小處找到可以一起做的。不要用消滅差異來求團結。",
+    ["小的背離先別追，保持基本的見面與分寸，失去的會自己回來。", "意外的小相遇能把線接上，不要錯過非正式的重逢。", "背離嚴重時會有羞辱感。堅持到該合的時候，仍能合。", "孤立時若遇到能信任的人，雖危險，可以沒有災咎。", "深層的認同若還在，就可以前進。", "你可能把親的看成敵。疑心放下，才知道是來合的。"]),
+  "001010": g(39, "蹇", "水山蹇", "見險知止", "守",
+    "前面有險，行走艱難。智慧是停、是回頭修自己、是找對方向繞，不是表彰自己不怕難。",
+    "見險而止。先把自己修好，往較可行的路走，不要往最險的方向賭氣。",
+    ["往前難，回來有稱譽。這個階段退比進好。", "為了該擔的責任而艱難，不是為了自己，就沒有災咎。", "往前更難，就返回。不要羞於回頭。", "困難時回來連接同伴，比獨自硬闖好。", "大的困難裡，朋友會來。守住中間的正。", "回來會有大的收穫，適合去見能決斷的人。"]),
+  "010100": g(40, "解", "雷水解", "緩解速行", "變",
+    "險難正在解開。結開始鬆了，就要快：該原諒的原諒，該行動的趁早，不要又拖延出新的結。",
+    "立刻處理剩下的那一件。難一過，就回到正常，不要繼續活在危機模式。",
+    ["鬆一口氣是對的，沒有災咎。", "清除投機取巧的，守住中直的，才是真的解。", "身份和做法不配，會招來奪取。解開之後不要立刻擺錯位子。", "先放開不該抓著的人，對的人才會來。", "正人把結解開，原先不順的人也會信服。", "看準那個高處的障礙，時機到了就一舉除去。"]),
+  "110001": g(41, "損", "山澤損", "損過受益", "省",
+    "你問的事需要減：減慾望、減開支、減自我、減不必要的複雜。損得有誠信，才是益。",
+    "先損掉忿和貪。短少的地方用誠心補。損是為了更重要的那一件能成立。",
+    ["該做的事趕緊做完，減要有分寸。", "有時不必為了減而減。守正，不要出征。", "人太多反而損。專一，才能遇到真正的同伴。", "趕快把毛病減掉，喜悅會跟著來。", "有大的助益送來，你推不掉。以誠接收。", "不必再損自己，已能利益別人。可以前往。"]),
+  "100011": g(42, "益", "風雷益", "遷善增益", "進",
+    "是增益，而且是上面減自己來益下面。見善就改、有過就改，益才會來。",
+    "把資源和注意力往下、往真正做事的地方送。自己也要能接受學習、幫忙和新的責任。",
+    ["適合做大的事。起點是吉的，可以認真開幹。", "大的益來了，永遠守正就吉。", "在壞消息和緊急事上仍能助人、把話溝通清楚，沒有災咎。", "依中道告訴能決定的人，可以被聽從，適合做重組。", "用誠信惠及人心，不必再問，大吉。別人也會回應你的德。", "若立心不恆、只想得，就沒有人再增益你，甚至會被攻擊。"]),
+  "111110": g(43, "夬", "澤天夬", "當機立斷", "變",
+    "決口要開。該決的是那一點不正。決要公開，要告訴眾人，不可用陰謀，也不可恃眾欺人。",
+    "把問題攤在光明處做決定。態度要剛，程序要正，對下面的人要有實際的分享。",
+    ["決斷不是冒進。腳尖很壯就往前，勝不了就是咎。", "有準備的決斷，不怕夜裡的突發。警惕即可，不必憂。", "一臉壯會凶。獨自做該做的決定，被人誤解也沒有災咎。", "坐立難安是因為你聽了不信。放下懷疑，跟著正的決斷走。", "不必用最猛的方式。走在中道去決，就沒有災咎。", "到了最後還不說、不決，凶在結尾。該決的時候不要沉默。"]),
+  "011111": g(44, "姤", "天風姤", "防微杜漸", "省",
+    "一個突然的相遇、一個新的因素鑽進來。相遇本身不邪，但要防它在很小的時候就長成問題。",
+    "可以見，不要倉促收編。新來的人、機會、念頭，先看會不會長大成問題。要擋，就在它還小的時候擋。",
+    ["用煞車拴住，守正就吉。還要往前衝，見到就凶。弱的一方也不可輕視。", "自己處理好這份相遇，不要張揚成公開的結盟。", "坐立不安是提醒你不要落座太深。有危險，沒有大咎。", "該在的人不在了，要反省自己為什麼留不住正的連結。", "含蓄地保護那個脆弱的新事物，機緣會來。", "用太剛、太高的方式去碰，遇不到真心，但也不會有大禍。"]),
+  "000110": g(45, "萃", "澤地萃", "聚心成事", "合",
+    "水聚成澤，是把人、資源、心意聚到一處。聚要有誠，也要有預防，人聚了之後容易有意外。",
+    "用清楚的目的和誠信召集。聚的時候準備好規矩和備用方案，不要只顧著熱鬧。",
+    ["誠信不能到底就會亂聚。把人叫回來，握手一笑，就可以前往。", "被引導而聚是吉。誠信比厚禮重要。", "聚不起來，只有嘆息。仍可前往，只有小遺憾。", "聚在這個位置，標準要高，必須真正吉才沒有災咎。", "別人還不信時，用長遠的正取得信任。", "聚集到最後若帶著敬慎，即使嘆到流淚，仍可無咎。"]),
+  "011000": g(46, "升", "地風升", "積小而升", "進",
+    "地中生木，是一步一步往上長。不是拔苗，是積小成高。柔順而合時，上升才穩。",
+    "每天做一點能累積的。順勢而升，不必張揚。遇到阻礙就修正方法，方向可以繼續向上。",
+    ["誠心同意一起上升，大吉。找願意一起長的人。", "有誠信，簡單的禮就夠，不必用重的方式證明你在上升。", "這段路很順，像升入空城。順的時候要把實質填進去。", "你的上升被放在該在的平台上，吉。", "一級一級上台階，不要跳級。守正吉。", "看不清時還陶醉於上升，只有不停守正才有利。"]),
+  "010110": g(47, "困", "澤水困", "困中守志", "守",
+    "澤裡的水漏掉了。你問的事有志難伸、說了沒人信、資源見底。困承認苦，同時要求你在限制裡守住志向。",
+    "少辯解，多保存體力與誠信。把能做的一小步做完。困的時候話最不被相信，用行動而不是宣言。",
+    ["不要再往更暗的地方躲，那會困很久。", "困在應酬裡時，貴人的命卻可能要來。適合敬慎面對，不宜出征。", "前後都是硬的和刺，連依靠都失去。這條路要立刻離開。", "來得很慢，有遺憾，最後仍有結果。慢不是失敗。", "受到削損，困在職位裡。慢慢能脫，用敬慎而不是硬脫。", "被纏住、站不穩。把後悔也放下，該動的時候就要動。"]),
+  "011010": g(48, "井", "水風井", "修井養人", "合",
+    "井養人，而不遷。你問的事關係到一個可以長期供應的來源：制度、能力、信任。井要修，水才清。",
+    "把那個源頭修好，並願意讓人來取用。不要守著一口不讓人用、或年久失修的井。",
+    ["源頭又舊又髒，先清，否則誰也不會靠近。", "有一點能力，卻裝不住。先補容器。", "已經淘清卻沒人用。讓明白的人看見，大家都會受益。", "這是修繕期，先把井壁砌好，不要急著產出。", "水已經清冽，適合供人取用。", "開放而可靠，不要把井蓋死。這是大吉。"]),
+  "101110": g(49, "革", "澤火革", "順天變革", "變",
+    "已經到了必須改的時候。變革要順天、應人：時機對、人們信，改革才成立。太早沒人跟，太晚局面已壞。",
+    "先說清楚為什麼改、改完什麼會更好，取得信任再動手。自己也要先改。",
+    ["還不到革的時候，先用堅韌把現況鞏固住。", "到了該革的日子再革，行動才吉。不要早一天逞強。", "此時出征有凶。變革的話要反覆說到人相信。", "有誠信地改變舊命，吉。這是真正可以改的位置。", "你若負責，就要變得讓人看得懂，信用自然在。", "革到後面要收。再無休止地革，會凶。安居守正才吉。"]),
+  "011101": g(50, "鼎", "火風鼎", "去故鼎新", "變",
+    "烹飪成新。你問的事適合去舊立新：換方法、把材料煮成能養人的成果。鼎重在正位，和用對的人。",
+    "把不該留的倒掉，把好的材料放進來，穩定地烹。革新之後要能供人使用，不是只圖一個新樣子。",
+    ["先把壞的倒出來。不平常的安排若能生出好結果，沒有災咎。", "把內容做實，對立的人就靠近不了你。", "搬動的把手壞了，好東西吃不到。先修好溝通，再推進。", "承擔超過能力，會把所託的食物打翻，凶。", "關鍵的人和制度都到位了，利於守正。", "剛柔相濟，溫潤而能承擔，大吉。"]),
+  "100100": g(51, "震", "震為雷", "驚而後省", "省",
+    "會有突然的震動：驚嚇、變動、一個大的響聲。吉在於嚇到之後能整肅自己，而不是嚇到之後潰散。",
+    "允許自己被驚到，然後立刻修省。把危險說清楚，把應對準備好。震是叫醒。",
+    ["一來就警惕，過後能談笑，吉。", "損失很大時，先避到高處。不要追，過一段時間會回來。", "驚嚇到發軟，若因此而行動修正，就沒有災。", "被嚇住卻不動，也不反省，就黏在泥裡。", "來往都危險，但只要還有該做的事，根本就不會喪失。", "震還在鄰近、還沒到你身上，你就先修，就沒有災咎。此時出征則凶。"]),
+  "001001": g(52, "艮", "艮為山", "止於當止", "守",
+    "該停的時候要能停，停在該停的地方，不想不該想的。止不是永遠不動，是時止則止，時行則行。",
+    "先停下來。不追加、不繼續解釋，直到你看清自己的位置。停得正，後面才走得對。",
+    ["從第一步就停，沒有災咎，利於長久守正。", "只停表面，心還被牽著，所以不快。", "停得太僵，會內傷。止要通，不要卡死。", "整個自己都安在該在的位置，沒有災咎。", "管住言語，說話有次序，悔會消失。", "厚重自然地停，不是刻意憋著，吉。"]),
+  "001011": g(53, "漸", "風山漸", "循序漸進", "進",
+    "像山上的樹慢慢長高。你問的事適合按次序進。漸進看起來慢，卻是能到的方式。",
+    "不要跳步。先站穩現在這一級，再上下一級。用正當的順序取得信任。",
+    ["起步時被人說話，是正常的，沒有災咎。", "已經有可以站穩的地方，飲食和樂，吉。", "失序地進，該回的不回、該成的不成，凶。這時只適合防守。", "位置不完美，但若有一個可暫棲的枝，就沒有災咎。", "很久沒有結果，最後仍沒有什麼能阻止。信這份次序。", "你的進程本身成為別人可以效法的樣子，吉。"]),
+  "110100": g(54, "歸妹", "雷澤歸妹", "名分要正", "省",
+    "悅而動，想結合、想趕快確定。感情和合作可以，位置和名分必須先正。不正的結合，走不遠。",
+    "先問這段關係或這個承諾站不站得住。不要因為喜悅就跳過名分、契約和長期責任。",
+    ["接受一個不完全的位置，只要走得正，仍可行動吉。", "看不太全，就不要搶著做主。利於守住自己的正。", "期望和位置不合。想當正位，結果仍是偏位。要接受現實的名分。", "晚一點不是沒人要，是時候未到。可以等。", "內涵接近圓滿時，不要只看排場。吉。", "儀式是空的，筐裡沒有東西。沒有實質的結合，不要舉行。"]),
+  "101100": g(55, "豐", "雷火豐", "盛時保明", "進",
+    "雷電皆至，正處在明亮而豐富的時刻。越盛越要保持明，不要在最亮的時候開始憂疑。",
+    "把該做的事在光明充足時做完。若出現遮蔽，先把內在的疑慮去掉。",
+    ["遇到對等的伙伴，即使勢均力敵，前往仍會被推崇。", "被遮蔽時，往前會被疑。用誠信表達，就吉。", "暗得很深，有些忙你幫不上。接受限制，沒有災咎。", "又被遮蔽，但遇到與你平等的人，就可以一起做事，吉。", "把光分享出去，會有喜慶和稱譽。", "房子很大，人卻不在。豐盛若只剩空殼，就是凶。"]),
+  "001101": g(56, "旅", "火山旅", "旅中守慎", "守",
+    "火不長住在山上，是外出、過渡、客居。旅人要明、要慎，不要在別人的地方逞強。",
+    "把自己當客人：輕裝、有禮、不拖泥帶水。小的亨通可以，大的據有不要在旅途中強求。",
+    ["旅途中計較瑣碎，就是招災的原因。", "安排好落腳處和旅費，得到可靠的幫助。", "旅居時若傲慢，客舍和幫助你的人都會失去。", "有了暫住的地方，心仍不快。接受這不是家。", "小的損失換來被認識，是旅中的吉。", "得意忘形，連暫居的巢都保不住，先笑後哭，凶。"]),
+  "011011": g(57, "巽", "巽為風", "柔順深入", "進",
+    "不適合硬攻，適合用柔順、持續、一遍遍說清楚的方式進入。",
+    "把指令和心意說到人能聽進去。自己也要能順入正道，而不是無原則地順從。",
+    ["一會進一會退時，給自己一個武人般的紀律。", "放低，多請人傳話，把疑慮說清楚，吉。", "太頻繁的退讓會失去尊重。", "柔順用對了，會有實在的收穫。", "開始不好，結束好。申明前後都要留時間讓人知道。", "順到把自己的資源和判斷力弄丟，就是凶。"]),
+  "110110": g(58, "兌", "兌為澤", "和悅守正", "合",
+    "兩澤相連，是悅。適合以和悅來溝通、學習、結交。悅而正就吉，悅而取媚就會空。",
+    "用真心的愉快靠近人和知識。可以商量。若只是討好，喜悅維持不久。",
+    ["沒有機心的好相處，吉。", "讓人高興是因為你可信，悔會消失。", "專門來討人喜歡，凶。", "可以商量，但要守住自己的限度，隔開毛病就有喜。", "太喜悅，會信錯正在消耗你的人。有危險。", "你正被什麼牽去喜悅，還沒有定論。看清楚再跟。"]),
+  "010011": g(59, "渙", "風水渙", "散而能聚", "變",
+    "有離心、有散掉的力量。有些險難要靠散開才能解。先把精神聚住，再把該散的散開。",
+    "先把心和核心的人聚住，再散開隔閡、風險和僵局。大的渙散之時，適合做超越私人的事。",
+    ["一開始散，就要趕快用有力的方式挽回，吉。", "散的時候奔向可以倚靠的地方，悔會消失。", "能為更大的事放下自己一身的利害，就沒有悔。", "散開小圈子，大吉。散之後會聚成更大的丘。", "該公開宣布、該把積蓄釋放出來了。", "離開受傷的現場，散開傷害，沒有災咎。"]),
+  "110010": g(60, "節", "水澤節", "節制有度", "省",
+    "水滿要有節制。你問的事需要限度：時間、金錢、說話、承諾。節而適中就通，苦到自己則不可久。",
+    "給自己定一個守得住的限度，並且真的遵守。太苦會反彈，太鬆就沒有節。",
+    ["知道還不該出門就不出，沒有災咎。節在開始時最有效。", "該出門還不出，就是凶。節過了頭，會錯過該行動的門。", "不知道節制就會嘆。若能因此改，就沒有災咎。", "這個限度是你能自然遵守的，所以可久，通達。", "節制做到讓人願意跟隨，甜美而吉。", "苦到自己的節制，守下去會凶。改成可承受的節。"]),
+  "110011": g(61, "中孚", "風澤中孚", "中心誠信", "合",
+    "中間是虛的，誠信在內。你問的事成敗在於誠。若中間是算計，外表再像也不會久。",
+    "說的和做的要是同一件事。對弱的一方也講信用。審慎，不要急著把事情判死。",
+    ["事先想好就吉。心裡若另有盤算，就不安。", "誠信會被感應。有好的，就和人分享。", "面對對立時一會兒鼓、一會兒停，是心不誠。先把內在定住。", "接近圓滿時，能放下對等的依靠，專心於上面的誠。", "用誠信把人牽在一起，沒有災咎。", "聲音沖得比真實還高，守正也凶。"]),
+  "001100": g(62, "小過", "雷山小過", "小過宜下", "守",
+    "可以在小處過一點：多一分恭敬、多一分謹慎、多走一小步。不可以做大事，不適合往上硬飛。",
+    "做小的、具體的、偏於向下的事。超過一點點是為了補不足，不是為了大動作。",
+    ["一開始就高飛，凶。", "略過一點、不到最高的位置，沒有災咎。", "不先過度防備，跟著去會受害，凶。", "不要過度，去相遇就好。前往有危，一定要警戒。這不是永久的正道。", "可以取小的收穫。大的還沒到，不要等一場大的。", "過的分寸沒了，該遇的沒遇上，這是災。"]),
+  "101010": g(63, "既濟", "水火既濟", "成後防怠", "省",
+    "每一爻都在它的位子上，事情已經做成。開始好，最要防的是完成之後的鬆懈和混亂。",
+    "先把成果穩住，想好會出問題的地方。不要在剛完成時大改，也不要大意。",
+    ["剛完成就煞車，反而安全。", "失去一點小的遮蔽，不要追，過一段時間會回來。", "完成後的整頓是長工。不要用小人，大事要打很久。", "隨時準備補漏，整天警戒。這是守成最好的態度。", "豐厚的形式不如簡樸的誠。守成靠實。", "已經過了河還把頭浸回去，就危險了。"]),
+  "010101": g(64, "未濟", "火水未濟", "未竟可繼", "進",
+    "每爻都還沒到它的位子，事情還沒完成。這不是失敗，是還有可做的。小心分辨，繼續把事情放對位置。",
+    "承認還沒好。把下一步的渡口找準，謹慎地過。不要因為接近完成就慶祝，也不要因為未成就放棄。",
+    ["能力還不夠就猛渡，會吃虧。", "未完成時能煞車，守正就吉。", "不是去硬打，是去渡。選對那一件該跨的，出征則凶。", "長期的艱難任務之後會有獎賞。守正，悔會消失。", "你的光來自誠信。這是未濟裡最亮的地方。", "接近完成時可以鬆，不能沉。過了分寸，誠信就失去。"])
+};
+
+const HISTORY_KEY = "yijing-coin-v1";
+const SOUND_KEY = "yijing-sound";
+const YAO = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
+
+const state = {
+  view: "ask",
+  mode: "cast",
+  question: "",
+  lines: [],
+  busy: false,
+  auto: false,
+  helpOpen: false,
+  resultAt: Date.now(),
+  persist: false,
+  sound: localStorage.getItem(SOUND_KEY) !== "0"
+};
+
+function orderedBits() {
+  return Object.keys(GUA).sort((a, b) => GUA[a].n - GUA[b].n);
+}
+
+function validate() {
+  const keys = Object.keys(GUA);
+  if (keys.length !== 64) return "卦數不是六十四。";
+  const seen = new Set();
+  for (const bits of keys) {
+    const item = GUA[bits];
+    if (!/^[01]{6}$/.test(bits)) return "卦象鍵不正確";
+    if (!item || item.lines.length !== 6) return (item ? item.name : bits) + " 爻辭不足";
+    if (item.n < 1 || item.n > 64 || seen.has(item.n)) return item.name + " 的卦序不對";
+    seen.add(item.n);
+    if (fullName(item, bits) !== item.full) return item.name + " 應為 " + fullName(item, bits);
+  }
+  return seen.size === 64 ? "" : "卦序不完整";
+}
+
+function fullName(item, bits) {
+  const lower = TRIGRAMS[bits.slice(0, 3)];
+  const upper = TRIGRAMS[bits.slice(3)];
+  if (lower.name === upper.name) return item.name + "為" + upper.nature;
+  return upper.nature + lower.nature + item.name;
+}
+
+function triText(bits) {
+  return { lower: TRIGRAMS[bits.slice(0, 3)], upper: TRIGRAMS[bits.slice(3)] };
+}
+
+function bitsOf(lines) {
+  return lines.map((line) => (line.yang ? "1" : "0")).join("");
+}
+
+function changedLines(lines) {
+  return lines.map((line) => (line.changing ? { ...line, yang: !line.yang, changing: false } : { ...line, changing: false }));
+}
+
+function yaoName(index, yang) {
+  const num = yang ? "九" : "六";
+  if (index === 0) return "初" + num;
+  if (index === 5) return "上" + num;
+  return num + ["", "二", "三", "四", "五"][index];
+}
+
+function glyph(n) {
+  return String.fromCodePoint(0x4DC0 + n - 1);
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function coinFace() {
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return (buf[0] & 1) ? 3 : 2;
+}
+
+function throwPhrase(coins) {
+  const yang = coins.filter((c) => c === 3).length;
+  return ["三背", "二背一字", "二字一背", "三字"][yang];
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function formatWhen(ts) {
+  const d = new Date(ts);
+  const p = (n) => String(n).padStart(2, "0");
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日 " + p(d.getHours()) + ":" + p(d.getMinutes());
+}
+
+function questionText() {
+  return state.question || "心中所問";
+}
+
+function loadHistory() {
+  try {
+    const data = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveCurrent() {
+  if (!state.persist) return;
+  const item = { id: String(state.resultAt), at: state.resultAt, question: state.question, lines: state.lines };
+  const all = loadHistory().filter((x) => x.id !== item.id);
+  all.unshift(item);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(all.slice(0, 20)));
+}
+
+function stackInner(lines, placeholders) {
+  const total = placeholders ? 6 : lines.length;
+  let html = "";
+  for (let i = 0; i < total; i += 1) {
+    const line = lines[i];
+    if (!line) {
+      html += '<div class="yao ghost"><div class="bars yang"><i></i></div><span></span></div>';
+      continue;
+    }
+    const cls = (line.yang ? "yang" : "yin") + (line.changing ? " changing" : "");
+    const bars = line.yang ? "<i></i>" : "<i></i><i></i>";
+    const just = placeholders && i === lines.length - 1 ? " just" : "";
+    const hot = line.changing ? " hot" : "";
+    html += '<div class="yao' + hot + just + '"><div class="bars ' + cls + '">' + bars + '</div><span class="yao-label">' + yaoName(i, line.yang) + "</span></div>";
+  }
+  return html;
+}
+
+function card(bits, lines, role) {
+  const item = GUA[bits];
+  const tri = triText(bits);
+  return '<article class="card"><p class="role">' + role + '</p><div class="glyph" aria-hidden="true">' + glyph(item.n) +
+    '</div><h2><em class="tone">' + item.tone + "</em>" + item.full + '</h2><p class="num">第 ' + item.n + " 卦 · " + item.motto +
+    '</p><div class="stack">' + stackInner(lines, false) + '</div><p class="tri">下卦 ' + tri.lower.name + " · " + tri.lower.nature + " · " + tri.lower.attr +
+    "<br>上卦 " + tri.upper.name + " · " + tri.upper.nature + " · " + tri.upper.attr + "</p></article>";
+}
+
+function setSoundButton() {
+  const button = document.getElementById("sound-btn");
+  if (button) button.textContent = state.sound ? "聲音開" : "聲音關";
+}
+
+function render() {
+  const main = document.getElementById("main");
+  if (state.view === "ask") main.innerHTML = askHtml();
+  else if (state.view === "cast") main.innerHTML = castHtml();
+  else if (state.view === "index") main.innerHTML = indexHtml();
+  else main.innerHTML = resultHtml();
+  if (state.view === "ask") {
+    const field = document.getElementById("q");
+    if (field) field.value = state.question || "";
+  }
+  if (state.view === "cast") paintCast();
+  document.title = state.view === "result" ? currentFull() + " · 周易金錢問卦" : "周易金錢問卦";
+  setSoundButton();
+  window.scrollTo(0, 0);
+}
+
+function currentFull() {
+  if (!state.lines.length) return "周易金錢問卦";
+  const bits = bitsOf(state.lines);
+  const item = GUA[bits];
+  return item ? item.full : "周易金錢問卦";
+}
+
+function askHtml() {
+  const history = loadHistory();
+  const items = history.map((item) => {
+    const bits = bitsOf(item.lines);
+    const gua = GUA[bits];
+    const name = gua ? gua.full : "卦";
+    return '<button class="item" type="button" data-action="history" data-id="' + esc(item.id) + '"><b>' + esc(name) + " · " + esc(item.question || "心中所問") + "</b><small>" + formatWhen(item.at) + "</small></button>";
+  }).join("");
+  return '<p class="lede">想好一件事。每次擲三枚錢幣，一共六次。陽爻是實線，陰爻是斷線，從下面往上疊成一卦。</p>' +
+    '<label for="q"><span>你想問的事</span></label>' +
+    '<textarea id="q" maxlength="80" placeholder="例如：這份工作，我還要繼續嗎？"></textarea>' +
+    '<p class="hint">也可以留白，在心裡問。一次只問一件具體的事。</p>' +
+    '<div class="actions"><button class="btn" type="button" data-action="start">開始擲幣</button>' +
+    '<button class="btn secondary" type="button" data-action="help">' + (state.helpOpen ? "收起說明" : "擲幣怎麼看") + "</button>" +
+    '<button class="btn secondary" type="button" data-action="index">六十四卦</button></div>' +
+    (state.helpOpen ? helpHtml() : "") +
+    (items ? '<section class="history"><h2>最近問過</h2>' + items + '<button class="text-btn" type="button" data-action="clear">清除記錄</button></section>' : "");
+}
+
+function helpHtml() {
+  return '<div class="help"><p>一次擲三枚錢幣，共六次，由下往上成爻。</p><ol>' +
+    "<li>字為陽，計三。背為陰，計二。</li>" +
+    "<li>三字是老陽，陽爻會變成陰。</li>" +
+    "<li>二字一背是少陰，陰爻不變。</li>" +
+    "<li>二背一字是少陽，陽爻不變。</li>" +
+    "<li>三背是老陰，陰爻會變成陽。</li>" +
+    "<li>本卦看眼下，變爻是轉折，之卦是走下去的方向。</li></ol></div>";
+}
+
+function castHtml() {
+  return '<div class="asked"><span>所問</span><strong>' + esc(questionText()) + "</strong></div>" +
+    '<div class="dots" id="dots"></div><p class="now" id="now">初爻</p>' +
+    '<div class="coins" aria-hidden="true"><div class="coin"><span class="mark">字</span></div><div class="coin"><span class="mark">字</span></div><div class="coin"><span class="mark">背</span></div></div>' +
+    '<p class="throw" id="throw-text" aria-live="polite"></p><div class="stack" id="stack"></div>' +
+    '<div class="actions"><button class="btn" id="toss-btn" type="button" data-action="toss">擲初爻</button>' +
+    '<button class="btn secondary" id="toss-all" type="button" data-action="toss-all">一次擲完</button>' +
+    '<button class="text-btn" type="button" data-action="again">放棄重來</button></div>' +
+    '<p class="legend">字三、背二。九是老陽，八是少陰，七是少陽，六是老陰。</p>';
+}
+
+function paintCast() {
+  const now = document.getElementById("now");
+  if (!now || state.view !== "cast") return;
+  const i = state.lines.length;
+  now.textContent = i < 6 ? YAO[i] : "卦成";
+  document.getElementById("dots").innerHTML = YAO.map((_, idx) => '<i class="' + (idx < i ? "on" : "") + '"></i>').join("");
+  document.getElementById("stack").innerHTML = stackInner(state.lines, true);
+  const last = state.lines[i - 1];
+  document.getElementById("throw-text").textContent = last
+    ? throwPhrase(last.coins) + " · " + last.name + " · " + last.sum + " · " + last.hint
+    : "字為陽，計三；背為陰，計二。";
+  const btn = document.getElementById("toss-btn");
+  const all = document.getElementById("toss-all");
+  btn.disabled = state.busy || i >= 6;
+  all.disabled = state.busy || i >= 6;
+  btn.textContent = state.busy ? "擲幣中" : (i >= 6 ? "卦成" : "擲" + YAO[i]);
+}
+
+function indexHtml() {
+  const cells = orderedBits().map((bits) => {
+    const item = GUA[bits];
+    return '<button type="button" data-action="open" data-bits="' + bits + '" data-n="' + item.n + '"><b>' + item.name + "</b><small>" + item.full + "</small></button>";
+  }).join("");
+  return '<p class="lede">點一卦，讀卦義。若要問眼前的事，回到擲幣。</p>' +
+    '<input class="search" id="filter" type="search" placeholder="搜尋卦名，例如：泰、謙、未濟" aria-label="搜尋卦名">' +
+    '<div class="grid">' + cells + "</div>" +
+    '<div class="actions"><button class="btn secondary" type="button" data-action="again">回到問卦</button></div>';
+}
+
+function bridge(item, lines) {
+  const n = lines.filter((line) => line.changing).length;
+  if (state.mode === "browse") return "這是卦義瀏覽，不是這一輪擲出來的卦。";
+  if (n === 0) return "六爻都安靜，沒有變爻。眼下的格局就是這一卦。";
+  if (n === 6 && item.name === "乾") return "六爻皆變。乾卦看用九：見群龍無首，吉。不必爭著做唯一的首領。變化之後進入坤的態勢。";
+  if (n === 6 && item.name === "坤") return "六爻皆變。坤卦看用六：利永貞。以柔順長久地守住正道。變化之後進入乾的態勢。";
+  if (n === 1) return "有一個變爻，它是這次問題的關鍵。本卦是眼下，之卦是走下去的方向。";
+  if (n >= 4) return "變爻很多，局面正在明顯轉向。之卦的分量更重，變爻用來看出轉折在哪裡。";
+  return "有幾個變爻，事情正在動。本卦看當下，變爻看關鍵，之卦看發展。多爻齊變時，先看它們共同指向的轉折。";
+}
+
+function resultHtml() {
+  const bits = bitsOf(state.lines);
+  const item = GUA[bits];
+  const changing = state.lines.filter((line) => line.changing);
+  const nextLines = changedLines(state.lines);
+  const nextBits = bitsOf(nextLines);
+  const next = GUA[nextBits];
+  const showNext = state.mode !== "browse" && changing.length > 0;
+  let html = '<div class="asked"><span>所問</span><strong>' + esc(questionText()) + "</strong></div>";
+  html += '<p class="meta" style="text-align:center">' + (state.mode === "browse" ? "卦義瀏覽" : "金錢課 · " + formatWhen(state.resultAt)) + "</p>";
+  html += '<div class="pair">' + card(bits, state.lines, showNext || state.mode === "browse" ? "本卦 · 眼下" : "本卦") +
+    (showNext ? card(nextBits, nextLines, "之卦 · 走向") : "") + "</div>";
+  html += '<p class="legend">' + (changing.length ? "實線為陽，斷線為陰。紅色是變爻：圓圈的老陽將變陰，叉號的老陰將變陽。" : "實線為陽，斷線為陰。") + "</p>";
+  html += '<section class="block"><h3>怎麼看</h3><p>' + bridge(item, state.lines) + "</p></section>";
+  html += '<section class="block"><h3>卦意</h3><p>' + item.summary + "</p></section>";
+  html += '<section class="block"><h3>可以怎麼做</h3><p>' + item.advice + "</p></section>";
+  if (changing.length) {
+    html += '<section class="block"><h3>變爻</h3><ol class="lines-read">' + changing.map((line) => {
+      const index = state.lines.indexOf(line);
+      return "<li><strong>" + yaoName(index, line.yang) + "</strong>　" + item.lines[index] + "</li>";
+    }).join("") + "</ol></section>";
+    html += '<section class="block"><h3>走向</h3><p>變過去之後，局勢偏向' + next.full + "。" + next.summary + "</p><p>" + next.advice + "</p></section>";
+  }
+  if (state.mode !== "browse" && state.lines.every((line) => line.coins)) {
+    html += '<section class="block"><h3>六次擲幣</h3><ol class="lines-read">' + state.lines.map((line, index) =>
+      "<li>" + YAO[index] + "：" + throwPhrase(line.coins) + "，" + line.name + "，" + line.sum + "</li>").join("") + "</ol></section>";
+  }
+  html += '<div class="actions no-print">';
+  if (state.mode === "browse") {
+    html += '<button class="btn" type="button" data-action="index">回到六十四卦</button><button class="btn secondary" type="button" data-action="again">去問卦</button>';
+  } else {
+    html += '<button class="btn" type="button" data-action="again">再問一卦</button><button class="btn secondary" type="button" data-action="copy">複製這卦</button>';
+  }
+  html += '<button class="btn secondary" type="button" data-action="print">列印</button></div>';
+  return html;
+}
+
+function readingText() {
+  const bits = bitsOf(state.lines);
+  const item = GUA[bits];
+  const changing = state.lines.filter((line) => line.changing);
+  const next = GUA[bitsOf(changedLines(state.lines))];
+  const rows = ["周易金錢問卦", "問題：" + questionText(), state.mode === "browse" ? "卦義瀏覽" : formatWhen(state.resultAt), ""];
+  rows.push("本卦：第 " + item.n + " 卦 " + item.full);
+  rows.push(item.summary);
+  rows.push(item.advice);
+  if (changing.length) {
+    rows.push("", "變爻：");
+    changing.forEach((line) => {
+      const index = state.lines.indexOf(line);
+      rows.push(yaoName(index, line.yang) + "　" + item.lines[index]);
+    });
+    rows.push("", "之卦：第 " + next.n + " 卦 " + next.full);
+    rows.push(next.summary);
+  }
+  return rows.join("\n");
+}
+
+async function animateCoins(coins) {
+  const nodes = [...document.querySelectorAll(".coin")];
+  nodes.forEach((node) => node.classList.add("flipping"));
+  const timer = setInterval(() => {
+    nodes.forEach((node) => {
+      node.querySelector(".mark").textContent = Math.random() < 0.5 ? "字" : "背";
+    });
+  }, 60);
+  await wait(720);
+  clearInterval(timer);
+  if (state.view !== "cast") return;
+  nodes.forEach((node, i) => {
+    node.classList.remove("flipping");
+    node.querySelector(".mark").textContent = coins[i] === 3 ? "字" : "背";
+  });
+  if (state.sound) {
+    clink();
+    setTimeout(clink, 80);
+    setTimeout(clink, 150);
+  }
+}
+
+let audioCtx;
+function clink() {
+  try {
+    audioCtx = audioCtx || new AudioContext();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    const t = audioCtx.currentTime;
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(920, t);
+    osc.frequency.exponentialRampToValueAtTime(240, t + 0.08);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.06, t + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(t + 0.2);
+  } catch (e) { /* 聲音不可用時略過 */ }
+}
+
+async function toss() {
+  if (state.busy || state.view !== "cast" || state.lines.length >= 6) return;
+  state.busy = true;
+  paintCast();
+  const note = document.getElementById("throw-text");
+  if (note) note.textContent = "錢幣離手……";
+  const coins = [coinFace(), coinFace(), coinFace()];
+  await animateCoins(coins);
+  if (state.view !== "cast") {
+    state.busy = false;
+    return;
+  }
+  const sum = coins.reduce((a, b) => a + b, 0);
+  state.lines.push({ coins, sum, ...LINE_KIND[sum] });
+  state.busy = false;
+  paintCast();
+  if (state.lines.length === 6) {
+    state.busy = true;
+    paintCast();
+    await wait(700);
+    state.busy = false;
+    if (state.view !== "cast") return;
+    finish();
+  }
+}
+
+async function tossAll() {
+  if (state.auto) return;
+  state.auto = true;
+  while (state.lines.length < 6 && state.view === "cast") {
+    await toss();
+    if (state.view === "cast" && state.lines.length < 6) await wait(260);
+  }
+  state.auto = false;
+}
+
+function start() {
+  const field = document.getElementById("q");
+  state.question = (field ? field.value : state.question).trim().slice(0, 80);
+  state.lines = [];
+  state.mode = "cast";
+  state.view = "cast";
+  state.persist = false;
+  state.busy = false;
+  state.auto = false;
+  render();
+}
+
+function finish() {
+  state.resultAt = Date.now();
+  state.persist = true;
+  state.view = "result";
+  state.mode = "cast";
+  saveCurrent();
+  render();
+}
+
+function again() {
+  if (state.view === "cast" && state.lines.length && !window.confirm("這次擲到一半，要放棄重來嗎？")) return;
+  state.view = "ask";
+  state.mode = "cast";
+  state.lines = [];
+  state.busy = false;
+  state.auto = false;
+  render();
+}
+
+function openHistory(id) {
+  const item = loadHistory().find((entry) => entry.id === id);
+  if (!item) return;
+  state.question = item.question;
+  state.lines = item.lines;
+  state.resultAt = item.at;
+  state.mode = "cast";
+  state.persist = false;
+  state.view = "result";
+  render();
+}
+
+function openGua(bits) {
+  state.mode = "browse";
+  state.persist = false;
+  state.lines = bits.split("").map((ch) => {
+    const yang = ch === "1";
+    return { coins: null, sum: yang ? 7 : 8, yang, changing: false, name: yang ? "少陽" : "少陰", hint: "靜爻" };
+  });
+  state.view = "result";
+  render();
+}
+
+async function copyReading() {
+  const text = readingText();
+  try {
+    if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+    else {
+      const area = document.createElement("textarea");
+      area.value = text;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+    const button = document.querySelector('[data-action="copy"]');
+    if (button) {
+      const old = button.textContent;
+      button.textContent = "已複製";
+      setTimeout(() => { button.textContent = old; }, 1400);
+    }
+  } catch (e) {
+    window.alert("這次沒能複製，請直接選取頁面上的文字。");
+  }
+}
+
+function toggleSound() {
+  state.sound = !state.sound;
+  localStorage.setItem(SOUND_KEY, state.sound ? "1" : "0");
+  setSoundButton();
+}
+
+function toggleHelp() {
+  const field = document.getElementById("q");
+  if (field) state.question = field.value;
+  state.helpOpen = !state.helpOpen;
+  render();
+}
+
+function onClick(event) {
+  const el = event.target.closest("[data-action]");
+  if (!el) return;
+  const action = el.dataset.action;
+  if (action === "sound") { toggleSound(); return; }
+  if (state.busy) return;
+  if (action === "start") start();
+  else if (action === "toss") toss();
+  else if (action === "toss-all") tossAll();
+  else if (action === "again") again();
+  else if (action === "help") toggleHelp();
+  else if (action === "index") { state.view = "index"; render(); }
+  else if (action === "open") openGua(el.dataset.bits);
+  else if (action === "history") openHistory(el.dataset.id);
+  else if (action === "clear") { localStorage.removeItem(HISTORY_KEY); render(); }
+  else if (action === "copy") copyReading();
+  else if (action === "print") window.print();
+}
+
+function onKey(event) {
+  if (event.key !== "Enter" || event.shiftKey || state.busy) return;
+  if (state.view === "ask" && event.target.id === "q") {
+    event.preventDefault();
+    start();
+  } else if (state.view === "cast") {
+    event.preventDefault();
+    toss();
+  }
+}
+
+function onInput(event) {
+  if (event.target.id !== "filter") return;
+  const q = event.target.value.trim();
+  document.querySelectorAll(".grid button").forEach((button) => {
+    const text = button.textContent || "";
+    button.hidden = Boolean(q) && !text.includes(q) && button.dataset.n !== q;
+  });
+}
+
+function boot() {
+  try {
+    const problem = validate();
+    if (problem) {
+      document.getElementById("main").textContent = problem;
+      return;
+    }
+  } catch (e) {
+    document.getElementById("main").textContent = e.message;
+    return;
+  }
+  document.addEventListener("click", onClick);
+  document.addEventListener("keydown", onKey);
+  document.addEventListener("input", onInput);
+  setSoundButton();
+  render();
+}
+
+if (typeof document !== "undefined") boot();
+</script>
+</body>
+</html>
